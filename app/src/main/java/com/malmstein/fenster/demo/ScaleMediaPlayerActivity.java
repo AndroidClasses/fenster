@@ -3,6 +3,7 @@ package com.malmstein.fenster.demo;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.malmstein.fenster.Constants;
 import com.malmstein.fenster.controller.SimpleMediaFensterPlayerController;
 import com.malmstein.fenster.view.FensterVideoView;
 
@@ -24,7 +25,7 @@ public class ScaleMediaPlayerActivity extends Activity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        textureView.setVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4");
+        textureView.setVideo(Constants.REMOTE_VIDEO_URL);
         textureView.start();
     }
 

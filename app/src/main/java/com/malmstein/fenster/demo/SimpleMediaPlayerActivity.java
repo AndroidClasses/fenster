@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.view.View;
 
+import com.malmstein.fenster.Constants;
 import com.malmstein.fenster.controller.FensterPlayerControllerVisibilityListener;
 import com.malmstein.fenster.controller.SimpleMediaFensterPlayerController;
 import com.malmstein.fenster.view.FensterVideoView;
@@ -33,7 +34,7 @@ public class SimpleMediaPlayerActivity extends Activity implements FensterPlayer
             AssetFileDescriptor assetFileDescriptor = getResources().openRawResourceFd(R.raw.big_buck_bunny);
             textureView.setVideo(assetFileDescriptor);
         } else {
-            textureView.setVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4");
+            textureView.setVideo(Constants.REMOTE_VIDEO_URL);
         }
 
         textureView.start();

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.malmstein.fenster.Constants;
 import com.malmstein.fenster.R;
 import com.malmstein.fenster.controller.FensterPlayerControllerVisibilityListener;
 import com.malmstein.fenster.controller.FensterPlayerController;
@@ -44,7 +45,7 @@ public class FensterVideoFragment extends Fragment implements FensterVideoStateL
     }
 
     public void playExampleVideo() {
-        textureView.setVideo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        textureView.setVideo(Constants.REMOTE_VIDEO_URL,
                 SimpleMediaFensterPlayerController.DEFAULT_VIDEO_START);
         textureView.start();
     }

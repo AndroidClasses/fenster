@@ -27,20 +27,29 @@ public class MediaPlayerDemoActivity extends Activity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.start_gesture_media_player_button:
-                startActivity(new Intent(this, GestureMediaPlayerActivity.class));
+            case R.id.start_gesture_media_player_button: {
+                Intent intent = new Intent(this, GestureMediaPlayerActivity.class);
+                intent.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
+                startActivity(intent);
                 break;
-            case R.id.start_simple_media_player_button:
-                startActivity(new Intent(this, SimpleMediaPlayerActivity.class));
+            }
+            case R.id.start_simple_media_player_button: {
+                Intent intent = new Intent(this, SimpleMediaPlayerActivity.class);
+                intent.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
+                startActivity(intent);
                 break;
+            }
             case R.id.local_file_media_player_button:
                 Intent localStream = new Intent(this, SimpleMediaPlayerActivity.class);
                 localStream.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
                 startActivity(localStream);
                 break;
-            case R.id.start_scale_media_player_button:
-                startActivity(new Intent(this, ScaleMediaPlayerActivity.class));
+            case R.id.start_scale_media_player_button: {
+                Intent intent = new Intent(this, ScaleMediaPlayerActivity.class);
+                intent.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
+                startActivity(intent);
                 break;
+            }
         }
     }
 
