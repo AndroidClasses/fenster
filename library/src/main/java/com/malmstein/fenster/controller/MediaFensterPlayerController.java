@@ -170,6 +170,7 @@ public final class MediaFensterPlayerController extends RelativeLayout implement
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         LayoutInflater.from(getContext()).inflate(R.layout.fen__view_media_controller, this);
         initControllerView();
     }
