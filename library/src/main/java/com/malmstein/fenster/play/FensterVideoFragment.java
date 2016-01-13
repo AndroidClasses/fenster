@@ -1,6 +1,7 @@
 package com.malmstein.fenster.play;
 
 import android.app.Fragment;
+import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,9 +45,12 @@ public class FensterVideoFragment extends Fragment implements FensterVideoStateL
         textureView.setOnPlayStateListener(this);
     }
 
-    public void playExampleVideo() {
-        textureView.setVideo(Constants.REMOTE_VIDEO_URL,
-                SimpleMediaFensterPlayerController.DEFAULT_VIDEO_START);
+    public void playExampleVideo(AssetFileDescriptor assetFileDescriptor) {
+        if (null != assetFileDescriptor) {
+            textureView.setVideo(assetFileDescriptor, SimpleMediaFensterPlayerController.DEFAULT_VIDEO_START);
+        } else {
+            textureView.setVideo(Constants.REMOTE_VIDEO_URL, SimpleMediaFensterPlayerController.DEFAULT_VIDEO_START);
+        }
         textureView.start();
     }
 

@@ -12,7 +12,6 @@ import com.malmstein.fenster.view.FensterVideoView;
 
 public class SimpleMediaPlayerActivity extends Activity implements FensterPlayerControllerVisibilityListener {
 
-    public static final String KEY_LOCAL_FILE = BuildConfig.APPLICATION_ID + "KEY_LOCAL_FILE";
     private FensterVideoView textureView;
     private SimpleMediaFensterPlayerController fullScreenMediaPlayerController;
 
@@ -30,7 +29,7 @@ public class SimpleMediaPlayerActivity extends Activity implements FensterPlayer
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        if (getIntent().hasExtra(KEY_LOCAL_FILE)) {
+        if (getIntent().hasExtra(Constants.KEY_LOCAL_FILE)) {
             AssetFileDescriptor assetFileDescriptor = getResources().openRawResourceFd(R.raw.big_buck_bunny);
             textureView.setVideo(assetFileDescriptor);
         } else {

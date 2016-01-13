@@ -1,6 +1,7 @@
 package com.malmstein.fenster.demo;
 
 import android.app.Activity;
+import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 
 import com.malmstein.fenster.Constants;
@@ -25,7 +26,13 @@ public class ScaleMediaPlayerActivity extends Activity {
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        textureView.setVideo(Constants.REMOTE_VIDEO_URL);
+
+        if (getIntent().hasExtra(Constants.KEY_LOCAL_FILE)) {
+            AssetFileDescriptor assetFileDescriptor = getResources().openRawResourceFd(R.raw.big_buck_bunny);
+            textureView.setVideo(assetFileDescriptor);
+        } else {
+            textureView.setVideo(Constants.REMOTE_VIDEO_URL);
+        }
         textureView.start();
     }
 

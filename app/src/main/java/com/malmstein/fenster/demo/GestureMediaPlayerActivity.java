@@ -1,9 +1,11 @@
 package com.malmstein.fenster.demo;
 
 import android.app.Activity;
+import android.content.res.AssetFileDescriptor;
 import android.os.Bundle;
 import android.view.View;
 
+import com.malmstein.fenster.Constants;
 import com.malmstein.fenster.controller.FensterPlayerControllerVisibilityListener;
 import com.malmstein.fenster.play.FensterVideoFragment;
 
@@ -23,7 +25,13 @@ public class GestureMediaPlayerActivity extends Activity implements FensterPlaye
 
     private void initVideo(){
         findVideoFragment().setVisibilityListener(this);
-        findVideoFragment().playExampleVideo();
+
+        if (getIntent().hasExtra(Constants.KEY_LOCAL_FILE)) {
+            AssetFileDescriptor assetFileDescriptor = getResources().openRawResourceFd(R.raw.big_buck_bunny);
+            findVideoFragment().playExampleVideo(assetFileDescriptor);
+        } else {
+            findVideoFragment().playExampleVideo(null);
+        }
     }
 
     private FensterVideoFragment findVideoFragment(){

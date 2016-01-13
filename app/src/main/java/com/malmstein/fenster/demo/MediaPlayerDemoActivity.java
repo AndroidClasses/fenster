@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.malmstein.fenster.Constants;
+
 public class MediaPlayerDemoActivity extends Activity implements View.OnClickListener {
 
     @Override
@@ -27,29 +29,29 @@ public class MediaPlayerDemoActivity extends Activity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.start_gesture_media_player_button: {
-                Intent intent = new Intent(this, GestureMediaPlayerActivity.class);
-                intent.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
+            case R.id.start_simple_media_player_button: {
+                Intent intent = new Intent(this, SimpleMediaPlayerActivity.class);
+                intent.putExtra(Constants.KEY_LOCAL_FILE, true);
                 startActivity(intent);
                 break;
             }
-            case R.id.start_simple_media_player_button: {
-                Intent intent = new Intent(this, SimpleMediaPlayerActivity.class);
-                intent.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
+            case R.id.start_scale_media_player_button: {
+                Intent intent = new Intent(this, ScaleMediaPlayerActivity.class);
+                intent.putExtra(Constants.KEY_LOCAL_FILE, true);
+                startActivity(intent);
+                break;
+            }
+            case R.id.start_gesture_media_player_button: {
+                Intent intent = new Intent(this, GestureMediaPlayerActivity.class);
+                intent.putExtra(Constants.KEY_LOCAL_FILE, true);
                 startActivity(intent);
                 break;
             }
             case R.id.local_file_media_player_button:
                 Intent localStream = new Intent(this, SimpleMediaPlayerActivity.class);
-                localStream.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
+                localStream.putExtra(Constants.KEY_LOCAL_FILE, true);
                 startActivity(localStream);
                 break;
-            case R.id.start_scale_media_player_button: {
-                Intent intent = new Intent(this, ScaleMediaPlayerActivity.class);
-                intent.putExtra(SimpleMediaPlayerActivity.KEY_LOCAL_FILE, true);
-                startActivity(intent);
-                break;
-            }
         }
     }
 
