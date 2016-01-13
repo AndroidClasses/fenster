@@ -99,6 +99,9 @@ public class FensterVideoView extends TextureView implements MediaController.Med
 
     private AlertDialog errorDialog;
 
+    private AssetFileDescriptor mOverlayFileDescriptor;
+    private MediaPlayer mOverlayMediaPlayer = null;
+
     public FensterVideoView(final Context context, final AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -184,12 +187,17 @@ public class FensterVideoView extends TextureView implements MediaController.Med
     }
 
     public void setVideo(final AssetFileDescriptor assetFileDescriptor) {
+        setVideo(assetFileDescriptor, null);
+    }
+    public void setVideo(final AssetFileDescriptor assetFileDescriptor, final AssetFileDescriptor overlayFileDescriptor) {
         mAssetFileDescriptor = assetFileDescriptor;
+        mOverlayFileDescriptor = overlayFileDescriptor;
         setVideoURI(null, null, VIDEO_BEGINNING);
     }
 
     public void setVideo(final AssetFileDescriptor assetFileDescriptor, final int seekInSeconds) {
         mAssetFileDescriptor = assetFileDescriptor;
+        mOverlayFileDescriptor = null;
         setVideoURI(null, null, seekInSeconds);
     }
 
@@ -228,6 +236,12 @@ public class FensterVideoView extends TextureView implements MediaController.Med
             mCurrentState = STATE_IDLE;
             mTargetState = STATE_IDLE;
         }
+
+        if (null != mOverlayMediaPlayer) {
+            mOverlayMediaPlayer.stop();
+            mOverlayMediaPlayer.release();
+            mOverlayMediaPlayer = null;
+        }
     }
 
     private void openVideo() {
@@ -240,6 +254,7 @@ public class FensterVideoView extends TextureView implements MediaController.Med
         release(false);
         try {
             mMediaPlayer = new MediaPlayer();
+            mOverlayMediaPlayer = new MediaPlayer(); // 创建MediaPlayer对象
 
             if (mAudioSession != 0) {
                 mMediaPlayer.setAudioSessionId(mAudioSession);
@@ -265,8 +280,22 @@ public class FensterVideoView extends TextureView implements MediaController.Med
             // we don't set the target state here either, but preserve the target state that was there before.
             mCurrentState = STATE_PREPARING;
             attachMediaController();
+
         } catch (final IOException | IllegalArgumentException ex) {
             notifyUnableToOpenContent(ex);
+        }
+
+        try {
+            boolean looping = true;
+//            mOverlayMediaPlayer.setDataSource(dataSource); // 设置需要播放的数据源
+            mOverlayMediaPlayer.prepare(); // 准备播放，如果是流媒体需要调用prepareAsync进行异步准备
+            if (looping) {
+                mOverlayMediaPlayer.setLooping(true); // 单曲循环
+            } else {
+                mOverlayMediaPlayer.setLooping(false); // 不循环播放
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -279,6 +308,14 @@ public class FensterVideoView extends TextureView implements MediaController.Med
             );
         } else {
             mMediaPlayer.setDataSource(getContext(), mUri, mHeaders);
+        }
+
+        if (null != mOverlayFileDescriptor) {
+            mOverlayMediaPlayer.setDataSource(mOverlayFileDescriptor.getFileDescriptor(),
+                    mOverlayFileDescriptor.getStartOffset(),
+                    mOverlayFileDescriptor.getLength());
+        } else {
+            // do nothing
         }
     }
 
@@ -645,6 +682,8 @@ public class FensterVideoView extends TextureView implements MediaController.Med
     public void start() {
         if (isInPlaybackState()) {
             mMediaPlayer.start();
+            mOverlayMediaPlayer.start();
+
             setKeepScreenOn(true);
             mCurrentState = STATE_PLAYING;
         }
@@ -656,6 +695,8 @@ public class FensterVideoView extends TextureView implements MediaController.Med
         if (isInPlaybackState()) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
+                mOverlayMediaPlayer.pause();
+
                 mCurrentState = STATE_PAUSED;
                 setKeepScreenOn(false);
             }
@@ -699,6 +740,8 @@ public class FensterVideoView extends TextureView implements MediaController.Med
     public void seekTo(final int millis) {
         if (isInPlaybackState()) {
             mMediaPlayer.seekTo(millis);
+            mOverlayMediaPlayer.seekTo(millis % mOverlayMediaPlayer.getDuration());
+
             mSeekWhenPrepared = 0;
         } else {
             mSeekWhenPrepared = millis;
@@ -758,6 +801,17 @@ public class FensterVideoView extends TextureView implements MediaController.Med
             foo.release();
         }
         return mAudioSession;
+    }
+
+    @Override
+    public void setSoundRatio(float scale) {
+        if (null != mMediaPlayer) {
+            mMediaPlayer.setVolume(scale, scale);
+        }
+        if (null != mOverlayMediaPlayer) {
+            float rs = 1.0f - scale;
+            mOverlayMediaPlayer.setVolume(rs, rs);
+        }
     }
 
     private final OnInfoListener onInfoToPlayStateListener = new OnInfoListener() {

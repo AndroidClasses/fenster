@@ -13,6 +13,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public final class SimpleMediaFensterPlayerController extends FrameLayout implem
     private View bottomControlsRoot;
     private View controlsRoot;
     private ProgressBar mProgress;
+    private ProgressBar mSoundBar;
     private TextView mEndTime;
     private TextView mCurrentTime;
 
@@ -64,6 +66,9 @@ public final class SimpleMediaFensterPlayerController extends FrameLayout implem
     private ImageButton mPrevButton;
     private ProgressBar loadingView;
     private int lastPlayedSeconds = -1;
+
+    private ImageView mSourceVoice;
+    private ImageView mMusicVoice;
 
     public SimpleMediaFensterPlayerController(final Context context) {
         this(context, null);
@@ -106,6 +111,13 @@ public final class SimpleMediaFensterPlayerController extends FrameLayout implem
         SeekBar seeker = (SeekBar) mProgress;
         seeker.setOnSeekBarChangeListener(mSeekListener);
         mProgress.setMax(1000);
+
+        mSourceVoice = (ImageView) findViewById(R.id.fen__media_controller_sound_source);
+        mMusicVoice = (ImageView) findViewById(R.id.fen__media_controller_sound_overlay);
+        SeekBar soundSeeker = (SeekBar) findViewById(R.id.fen__media_controller_sound_bar);
+        soundSeeker.setOnSeekBarChangeListener(mSoundListener);
+        mSoundBar = soundSeeker;
+        mSoundBar.setMax(1000);
 
         mEndTime = (TextView) findViewById(R.id.fen__media_controller_time);
         mCurrentTime = (TextView) findViewById(R.id.fen__media_controller_time_current);
@@ -338,6 +350,10 @@ public final class SimpleMediaFensterPlayerController extends FrameLayout implem
         if (mProgress != null) {
             mProgress.setEnabled(enabled);
         }
+        if (mSoundBar != null) {
+            mSoundBar.setEnabled(enabled);
+        }
+
         super.setEnabled(enabled);
     }
 
@@ -439,6 +455,39 @@ public final class SimpleMediaFensterPlayerController extends FrameLayout implem
             mHandler.sendEmptyMessage(SHOW_PROGRESS);
         }
     };
+
+    private final SeekBar.OnSeekBarChangeListener mSoundListener = new SeekBar.OnSeekBarChangeListener() {
+        public void onStartTrackingTouch(final SeekBar bar) {
+        }
+
+        public void onProgressChanged(final SeekBar bar, final int progress, final boolean fromuser) {
+            if (!fromuser) {
+                // We're not interested in programmatically generated changes to
+                // the progress bar's position.
+                return;
+            }
+
+            mFensterPlayer.setSoundRatio(progress / 1000f);
+        }
+
+        public void onStopTrackingTouch(final SeekBar bar) {
+            setSoundBar(bar.getProgress());
+        }
+    };
+
+    private void setSoundBar(int progress) {
+        if (progress == 1000) {
+            mSourceVoice.setVisibility(INVISIBLE);
+        } else {
+            mSourceVoice.setVisibility(VISIBLE);
+        }
+
+        if (progress == 0) {
+            mMusicVoice.setVisibility(INVISIBLE);
+        } else {
+            mMusicVoice.setVisibility(VISIBLE);
+        }
+    }
 
     private final Handler mHandler = new Handler() {
         @Override

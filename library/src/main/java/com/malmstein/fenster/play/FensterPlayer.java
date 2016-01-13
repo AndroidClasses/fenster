@@ -32,4 +32,5 @@ public interface FensterPlayer {
      */
     int getAudioSessionId();
 
+    void setSoundRatio(float scale);
 }

@@ -31,7 +31,8 @@ public class SimpleMediaPlayerActivity extends Activity implements FensterPlayer
 
         if (getIntent().hasExtra(Constants.KEY_LOCAL_FILE)) {
             AssetFileDescriptor assetFileDescriptor = getResources().openRawResourceFd(R.raw.big_buck_bunny);
-            textureView.setVideo(assetFileDescriptor);
+            AssetFileDescriptor overlayFileDescriptor = getResources().openRawResourceFd(R.raw.test);
+            textureView.setVideo(assetFileDescriptor, overlayFileDescriptor);
         } else {
             textureView.setVideo(Constants.REMOTE_VIDEO_URL);
         }

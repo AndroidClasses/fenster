@@ -44,6 +44,37 @@
 
 
     <LinearLayout
+        android:id="@+id/fen__media_controller_sound_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/fen__media_controller_bottom_margin"
+        android:gravity="top">
+
+      <ImageView
+          android:id="@+id/fen__media_controller_sound_source"
+          style="@style/MediaText"
+          android:src="@drawable/fen__ic_action_bulb"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" />
+
+      <SeekBar
+          android:id="@+id/fen__media_controller_sound_bar"
+          android:layout_width="0dip"
+          android:layout_height="@dimen/fen__media_controller_seekbar_height"
+          android:layout_weight="1" />
+
+      <ImageView
+          android:id="@+id/fen__media_controller_sound_overlay"
+          style="@style/MediaText"
+          android:src="@drawable/fen__ic_action_music_2"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
       android:id="@+id/media_controller_controls_root"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
